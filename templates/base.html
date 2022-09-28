@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="styles.css">  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+	<title>Not Facebook</title>
+</head>
+<body>
+	<header>
+		<a href='/'>
+		<div class="flex_items"><h1>not facebook</h1></div>
+		</a>
+		
+		<div class="flext_items"><p><i>Stealing your data since 2004.</i></p></div>
+		
+	</header>
+
+	{% block main %}
+	{% endblock %}
+</body>

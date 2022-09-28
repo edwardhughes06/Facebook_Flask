@@ -1,0 +1,97 @@
+header {
+	background-color: #3b5998;
+	display:flex;
+	align-items: center;
+	color:#fff; 
+	height: 80px;
+	justify-content: left;
+}
+h1 {
+	font-family: Helvetica;
+	padding-left: 20px;
+}
+a {
+	text-decoration: none;
+	color: white;
+	
+}
+p {
+	color: white;
+	font-size: 14px;
+	margin-top: 10px;
+	position: relative;
+}
+.flex-item{
+	justify-content: left;
+	float: left;
+	width: 100%;
+	position: relative;
+}
+body {
+	margin: 0;
+	font-family:Arial;
+	
+}
+
+.user-entry-form {
+	margin: 75px auto 75px auto;
+	max-width: 700px;
+	min-height: 300px;
+	background-color:#d6d6d6;
+}
+
+.form-container {
+	padding:20px;
+}
+
+.input-container {
+	display: flex;
+	flex:1;
+	gap: 10px;
+	flex-basis: 25%;
+	align-items:center;
+}
+
+.input-label {
+	min-width:150px;
+}
+
+input {
+	height:75%;
+}
+
+.error{
+	display = none;
+}
+
+.friend-list {
+	margin: 0 auto 0 auto;
+	max-width: 85vw;
+	display:flex;
+	gap: 60px;
+}
+
+.friend-container {
+  width: 25%;
+  padding: 30px;
+  background-color: whitesmoke;
+  border: solid;
+  box-sizing: border-box;
+  border: solid darkgray;
+
+}
+
+.friend-info-row {
+	display:flex;
+}
+
+.welcome-hi {
+	margin-left:7.5%;
+	font-size:28px;
+}
+.welcome-hi > h2 {
+	font-size:72px;
+}
+.welcome-hi >h4 {
+	margin-top:-6vh;
+}

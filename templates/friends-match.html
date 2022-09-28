@@ -1,0 +1,35 @@
+{% extends 'base.html'%}
+
+{% block main%}
+<div class="welcome-hi">
+	<h2>Hi, {{user_details.name}}</h3>
+	<h4>Based on what you've told us, we've selected 4 people on our platform that are most similar to you.</h4>
+</div>
+
+
+<div class="friend-list">
+	{% for i in range(0,4) %}
+		<div class="friend-container">
+			<h2>Friend {{i+1}}</h2>
+			
+		{% for x in range(0,6) %}
+			{% set y=x+(i*6) %}
+			<div class="friend-info-row">
+				<h4 style="padding-right:3px;">{{friend_card_prefixes[x]}}</h4>
+				<h3 id={{x}}>{{ aggregate_list[y] }}</h3>
+			</div>
+			
+			
+		{% endfor %}
+		</div>
+	{% endfor %}
+
+
+
+
+
+
+</div>
+
+
+{% endblock %}
