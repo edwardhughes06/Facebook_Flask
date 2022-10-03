@@ -1,5 +1,27 @@
 {% extends 'base.html'%}
 
+<head>
+	<script>
+		function addFriend(id) {
+			var add-friend-id = id;
+			var remove-friend-id = id+50;
+			
+			
+			document.getElementById(add-friend-id).style.display = "none";
+			document.getElementById(remove-friend-id).style.display = "block";
+			
+		}
+		function removeFriend(id) {
+			var add-friend-id = id-50;
+			var remove-friend-id = id;
+			
+			document.getElementById(add-friend-id).style.display = "block";
+			document.getElementById(remove-friend-id).style.display = "none";
+			
+		}
+	</script>
+</head>
+
 {% block main%}
 <div class="welcome-hi">
 	<h2>Hi, {{user_details.name}}</h3>
@@ -18,9 +40,16 @@
 				<h4 style="padding-right:3px;">{{friend_card_prefixes[x]}}</h4>
 				<h3 id={{x}}>{{ aggregate_list[y] }}</h3>
 			</div>
+
+			
 			
 			
 		{% endfor %}
+			
+			
+			<button id={{i+50}} class="add-button" onclick="document.getElementById({{i+50}}).style.display = 'none'; document.getElementById({{i+100}}).style.display = 'block';";">Add Friend</button>
+			<button id={{i+100}} class="remove-button" onclick="document.getElementById({{i+50}}).style.display = 'block'; document.getElementById({{i+100}}).style.display = 'none';" >Remove Friend</button>
+			
 		</div>
 	{% endfor %}
 

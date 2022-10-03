@@ -1,10 +1,29 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
+from flask_bootstrap import Bootstrap
+from replit import db
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Email, Length
+import email_validator
+from flask_sqlalchemy import SQLAlchemy
+import sqlite3
+from sqlitemodel import Model, Database
+
 import json
 from user_details_class import user_details
 import csv
 import random
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'Edisthebestprogrammerintheworld!'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'https://replit.com/@MattandEdward/FacebookFlask#database1.db'
+Bootstrap(app)
 
+Database.DB_FILE = '/users.db'
+db = sqlite3.connect('users.db')
+cursor = db.cursor()
+
+# db = sqlite3.connect('users.db')
 user_file = "users.json"
 
 
@@ -114,54 +133,7 @@ def get_user_input():
 
 	write_json(dictionary, array_name="user_details",filename="users.json")
 
-# def similar_person():
-	
-# 	user_details.name = request.form["user_name"]
-# 	user_details.age = request.form["user_age"]
-# 	user_details.favourite_colour = request.form["favourite_colour"]
-# 	user_details.favourite_food = request.form["favourite_food"]
-# 	user_details.favourite_sport = request.form["favourite_sport"]
-	
-# 	likeness = 0
-# 	file = "users.json"
-# 	def itterate_json(user_details_object,value_name, file="users.json"):
-# 		with open(file,'r+') as file:
-				
-# 			file_data = json.load(file)
-			
-# 			for item in file_data["user_details"]:
-# 				if item[value_name] == user_details.user_details_object:
-# 					dictionary = {
-# 						"id":item["id"],
-# 						"likeness":100,
-# 					}
-# 				write_json(dictionary,array_name='likeness', filename='likeness.json')
-					
-# 	itterate_json(user_details_object="name",value_name="name", file="users.json")
 
-# def filter_by_characteristics(characteristics):
-# 	# next_id = get_next_id()
-# 	filter_option = request.form["filter_select"]
-	
-# 	user_details.name = request.form["user_name"]
-# 	user_details.age = request.form["user_age"]
-# 	user_details.favourite_colour = request.form["favourite_colour"]
-# 	user_details.favourite_food = request.form["favourite_food"]
-# 	user_details.favourite_sport = request.form["favourite_sport"]
-# 	with open("likeness.json","r+") as file:
-# 		for item in file:
-# 			if item["name"] == user_details.name:
-# 				print(item[id])
-				
-				
-# 				# dictionary = {
-# 			# 		"id":item["id"],
-# 			# 		"likeness":"match",
-				
-# 			# 	}
-# 			# write_json(dictionary, array_name="likeness", file_name="likeness.json")
-
-        
 def filter_by():
 
 	user_details.name = request.form["user_name"].lower()
@@ -230,22 +202,22 @@ def most_like(user_id):
 				# if same age and same colour
 				
 				for x in range(0,len(item["same_age"])):
-					if item["same_age"][x] in item["same_colour"] and item["id"] not in friend_list:
+					if item["same_age"][x] in item["same_colour"] and item["same_age"][x] not in friend_list:
 						friend_list.append(item["same_age"][x])
 						break
 				# if same food and sport
 				for x in range(0,len(item["same_food"])):
-					if item["same_food"][x] in item["same_sport"] and item["id"] not in friend_list:
+					if item["same_food"][x] in item["same_sport"] and item["same_food"][x] not in friend_list:
 						friend_list.append(item["same_food"][x])
 						break
 				# same age and sport
 				for x in range(0,len(item["same_age"])):
-					if item["same_age"][x] in item["same_sport"] and item["id"] not in friend_list:
+					if item["same_age"][x] in item["same_sport"] and item["same_age"][x] not in friend_list:
 						friend_list.append(item["same_age"][x])
 						break
 				# same sport and colour
 				for x in range(0,len(item["same_sport"])):
-					if item["same_sport"][x] in item["same_colour"] and item["id"] not in friend_list:
+					if item["same_sport"][x] in item["same_colour"] and item["same_sport"][x] not in friend_list:
 						friend_list.append(item["same_sport"][x])
 						break
 
@@ -272,10 +244,22 @@ def get_friend_details_for_html(friend_list):
 
 	return aggregate_list
 			
-				
-		
+class User(db.Model):
+	id = db.Column(db.Integer, primary_key= True)
+	username = db.Column(db.String(15), unique=True)
+	email = db.Column(db.String(50), unique=True)
+	password = db.Column(db.String(80))
 
+db.create_all()
+class LoginForm(FlaskForm):
+	username = StringField('username', validators=[InputRequired(), Length(min=4,max=16)])
+	password = PasswordField('password', validators=[InputRequired(),Length(min=8,max=80)])
+	remember = BooleanField('remember me')
 
+class RegisterForm(FlaskForm):
+	email = StringField('email', validators=[InputRequired(), Email(message="invalid email"),Length(max=50)])
+	username = StringField('username', validators=[InputRequired(), Length(min=4,max=16)])
+	password = PasswordField('password', validators=[InputRequired(),Length(min=8,max=80)])
 
 
 
@@ -305,7 +289,6 @@ def match_results():
 		aggregate_list = get_friend_details_for_html(most_like(this_id))
 
 	friend_card_prefixes = ["User ID:  ","Name:  ","Age:  ","Favourite Colour:  ", "Favourite Food:  ","Favourite Sport:  "]
-
 	return render_template('friends-match.html',friend_card_prefixes=friend_card_prefixes ,user_details=user_details,aggregate_list=aggregate_list)
 
 @app.route('/populate/',methods=['GET','POST'])
@@ -316,5 +299,22 @@ def populate_table():
 
 	return render_template('index.html',user_details=user_details)
 
+@app.route('/sign-up/',methods=['GET','POST'])
+def sign_up():
+	form = RegisterForm()
 
-app.run(host='0.0.0.0', port=81, debug=True)
+	if form.validate_on_submit():
+		pass
+		
+	return render_template('sign-up.html',form=form)
+
+@app.route('/login/', methods=['GET','POST'])
+def login():
+	form = LoginForm()
+
+	if form.validate_on_submit():
+		return '<h1>' + form.username.data + '' + form.password.data + '</h1>'
+	
+	return render_template('login.html',form=form)
+
+app.run(host='0.0.0.0', port=81)

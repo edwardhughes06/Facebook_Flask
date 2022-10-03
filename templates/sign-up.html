@@ -1,0 +1,41 @@
+{% extends 'base.html'%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block main%}
+
+<div class="sign-up-form-container">
+	<div class="form-holder">
+		<form name="sign-up-form" action="/sign-up/" method='POST'>
+			{{ form.hidden_tag() }}
+			<div class="input-container sign-up">
+				<h4 class="input-label">First Name</h4>
+				{{ wtf.form_field(form.username) }}
+			</div>
+			<div class="input-container sign-up">
+				<h4 class="input-label">Email Address</h4>
+				{{ wtf.form_field(form.email) }}
+			</div>
+<!-- 			<div class="input-container sign-up">
+				<h4 class="input-label">Date of Birth</h4>
+				<input class="sign-up-input-field" type="date" name="sign-up-name">
+			</div> -->
+			<div class="input-container sign-up">
+				<h4 class="input-label">Password</h4>
+				{{ wtf.form_field(form.password) }}
+				
+				
+			</div>
+			<button class="sign-up-button" type="submit">Sign Up</button>
+		</form>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock %}
