@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, flash
 from flask_bootstrap import Bootstrap
-from replit import db
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
@@ -14,15 +13,16 @@ import json
 from user_details_class import user_details
 import csv
 import random
+
+database = sqlite3.connect("database.db")
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Edisthebestprogrammerintheworld!'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'https://replit.com/@MattandEdward/FacebookFlask#database1.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'C:\\Users\\edwar\\Desktop\\Facebook_flask\\Facebook_Flask\\database.db'
 Bootstrap(app)
 
-Database.DB_FILE = '/users.db'
-db = sqlite3.connect('users.db')
-cursor = db.cursor()
-
+db = SQLAlchemy(app)
+db.create_all()
 # db = sqlite3.connect('users.db')
 user_file = "users.json"
 
@@ -250,7 +250,6 @@ class User(db.Model):
 	email = db.Column(db.String(50), unique=True)
 	password = db.Column(db.String(80))
 
-db.create_all()
 class LoginForm(FlaskForm):
 	username = StringField('username', validators=[InputRequired(), Length(min=4,max=16)])
 	password = PasswordField('password', validators=[InputRequired(),Length(min=8,max=80)])
