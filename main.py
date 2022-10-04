@@ -14,16 +14,13 @@ from user_details_class import user_details
 import csv
 import random
 
-database = sqlite3.connect("database.db")
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Edisthebestprogrammerintheworld!'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'C:\\Users\\edwar\\Desktop\\Facebook_flask\\Facebook_Flask\\database.db'
+app.config['SECRET_KEY'] = 'Mattisthebestprogrammerintheworld!'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user_database.db'
 Bootstrap(app)
 
 db = SQLAlchemy(app)
-db.create_all()
-# db = sqlite3.connect('users.db')
 user_file = "users.json"
 
 
@@ -260,7 +257,7 @@ class RegisterForm(FlaskForm):
 	username = StringField('username', validators=[InputRequired(), Length(min=4,max=16)])
 	password = PasswordField('password', validators=[InputRequired(),Length(min=8,max=80)])
 
-
+db.create_all()
 
 @app.route('/', methods=['GET','POST'])
 def index():
@@ -303,7 +300,11 @@ def sign_up():
 	form = RegisterForm()
 
 	if form.validate_on_submit():
-		pass
+		new_user = User(username=form.username.data, email=form.email.data, password=form.password.data)
+		db.session.add(new_user)
+		db.session.commit()
+
+		return "new user has been created"
 		
 	return render_template('sign-up.html',form=form)
 
