@@ -257,7 +257,7 @@ class RegisterForm(FlaskForm):
 	username = StringField('username', validators=[InputRequired(), Length(min=4,max=16)])
 	password = PasswordField('password', validators=[InputRequired(),Length(min=8,max=80)])
 
-db.create_all()
+print(User.query.all())
 
 @app.route('/', methods=['GET','POST'])
 def index():
