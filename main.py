@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_bootstrap import Bootstrap
 
 from flask_wtf import FlaskForm
@@ -8,6 +8,9 @@ import email_validator
 from flask_sqlalchemy import SQLAlchemy
 import sqlite3
 from sqlitemodel import Model, Database
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 import json
 from user_details_class import user_details
@@ -21,6 +24,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user_database.db'
 Bootstrap(app)
 
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 user_file = "users.json"
 
 
@@ -241,26 +248,33 @@ def get_friend_details_for_html(friend_list):
 
 	return aggregate_list
 			
-class User(db.Model):
+class User(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key= True)
 	username = db.Column(db.String(15), unique=True)
 	email = db.Column(db.String(50), unique=True)
 	password = db.Column(db.String(80))
 
+@login_manager.user_loader
+def load_user(user_id):
+	return User.query.get(int(user_id))
+
 class LoginForm(FlaskForm):
-	username = StringField('username', validators=[InputRequired(), Length(min=4,max=16)])
-	password = PasswordField('password', validators=[InputRequired(),Length(min=8,max=80)])
-	remember = BooleanField('remember me')
+	username = StringField('',validators=[InputRequired(), Length(min=4,max=16)])
+	password = PasswordField('',validators=[InputRequired(),Length(min=8,max=80)])
+	remember = BooleanField('Remember me')
 
 class RegisterForm(FlaskForm):
-	email = StringField('email', validators=[InputRequired(), Email(message="invalid email"),Length(max=50)])
-	username = StringField('username', validators=[InputRequired(), Length(min=4,max=16)])
-	password = PasswordField('password', validators=[InputRequired(),Length(min=8,max=80)])
+	email = StringField('', validators=[InputRequired(), Email(message="invalid email"),Length(max=50)])
+	username = StringField('', validators=[InputRequired(), Length(min=4,max=16)])
+	password = PasswordField('', validators=[InputRequired(),Length(min=8,max=80)])
 
-print(User.query.all())
-
-@app.route('/', methods=['GET','POST'])
+@app.route('/',methods=['GET','POST'])
 def index():
+	return redirect(url_for('login'))
+
+
+@app.route('/oldindex/', methods=['GET','POST'])
+def oldindex():
 	if request.method == 'POST':
 		# similar_person()
 		# filter_by_characteristics(request.form["filter_select"])
@@ -272,7 +286,7 @@ def index():
 	food_options = ["Chips","Doughnuts","Ice Cream","Chicken Nuggets","Pizza","Burgers","Steak","Sausages"]
 	sport_options = ["Football","Rugby","Cricket","Badminton","Cycling","Tennis","Basketball"]
 	filter_options= ["name","age","favourite_colour","favourite_food","favourite_sport"]
-	return render_template("index.html" ,filter_options=filter_options,colour_options=colour_options, food_options=food_options, sport_options=sport_options)
+	return render_template("oldindex.html" ,filter_options=filter_options,colour_options=colour_options, food_options=food_options, sport_options=sport_options)
 
 
 @app.route('/friends-match/',methods=['GET','POST'])
@@ -300,9 +314,11 @@ def sign_up():
 	form = RegisterForm()
 
 	if form.validate_on_submit():
-		new_user = User(username=form.username.data, email=form.email.data, password=form.password.data)
+		hashed_password = generate_password_hash(form.password.data, method='sha256')
+		new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
 		db.session.add(new_user)
 		db.session.commit()
+		
 
 		return "new user has been created"
 		
@@ -313,8 +329,26 @@ def login():
 	form = LoginForm()
 
 	if form.validate_on_submit():
-		return '<h1>' + form.username.data + '' + form.password.data + '</h1>'
+		user = User.query.filter_by(username=form.username.data).first()
+		if user:
+			if check_password_hash(user.password, form.password.data):
+				login_user(user, remember=form.remember.data)
+				return redirect(url_for('dashboard'))
+
+		return '<h1>Invalid Username or password</h1>'
 	
 	return render_template('login.html',form=form)
 
-app.run(host='0.0.0.0', port=81)
+@app.route('/dashboard/', methods=['GET','POST'])
+@login_required
+def dashboard():
+	return render_template('dashboard.html', name=current_user.username)
+
+@app.route('/logout/')
+@login_required
+def logout():
+	logout_user()
+	return redirect(url_for('index'))
+
+
+app.run(host='0.0.0.0', port=81,debug=True)

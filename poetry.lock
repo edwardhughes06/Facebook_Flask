@@ -166,6 +166,18 @@ Flask = ">=0.8"
 visitor = "*"
 
 [[package]]
+name = "flask-login"
+version = "0.6.2"
+description = "User authentication and session management for Flask."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Flask = ">=1.0.4"
+Werkzeug = ">=1.0.1"
+
+[[package]]
 name = "flask-sqlalchemy"
 version = "2.5.1"
 description = "Adds SQLAlchemy support to your Flask application."
@@ -619,7 +631,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8.0,<3.9"
-content-hash = "1fe21c5cb1ea1004233815625e11b1a9ec0f0ef36088f510ff5d9f851dd4dc8a"
+content-hash = "d4229ca76bf38c6c89a24f1f045e0dddd4a7d26e2398eb07a0fcd369c1db20b9"
 
 [metadata.files]
 aiohttp = []
@@ -636,6 +648,7 @@ dominate = []
 email-validator = []
 flask = []
 flask-bootstrap = []
+flask-login = []
 flask-sqlalchemy = []
 flask-wtf = []
 frozenlist = []

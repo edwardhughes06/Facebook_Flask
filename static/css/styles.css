@@ -4,6 +4,9 @@ header {
 	height: 80px;
 	display: flex;
 }
+body {
+	background-color:#f0f2f5;
+}
 h1 {
 	font-family: Helvetica;
 	padding-left: 20px;
@@ -105,10 +108,13 @@ input {
 
 .sign-up-button {
 	background-color:#42b72a;
-	border-radius: 2px;
+	color:white;
+	padding:14px 16px;
 	border:none;
-	color: white;
-	padding: 5px 15px;
+	min-width:120px;
+	border-radius:6px;
+  font-size: 18px;
+
 }
 .sign-up-button:hover {
 	background-color:#338c21;
@@ -169,4 +175,77 @@ input:focus {
 }
 .remove-button:hover {
 	background-color:#bd0000;
+}
+.login-page {
+	margin:auto;
+	height:90vh;
+	overflow-y:hidden;
+}
+.login-form-container {
+	margin-top:40%;
+	display:flex;
+	gap: 100px;
+	width:fit-content;
+	margin:auto;
+	margin-top:15vh;
+	padding-top:40px;
+}
+
+
+.login-form-item >.total-form {
+	padding:30px;
+	background-color: #fff;
+	border: none;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+}
+
+.input-container {
+	padding:10px;
+}
+
+.form-control {
+	font-size: 18px;
+	padding:14px 16px;
+	width: 330px;
+	border:1px solid #dddfe2;
+	border-radius:6px;
+	
+}
+.login-button {
+	font-size: 18px;
+	color:white;
+	padding:14px 16px;
+	width: 364px;
+	background-color: #3b5998;
+	border:none;
+	border-radius:6px;
+}
+.login-button:hover {
+  background-color:#263963;
+}
+
+.checkbox {
+	padding:20px;
+}
+
+.sign-up-button.login {
+	font-size: 18px;
+	color:white;
+	padding:14px 16px;
+	width: 364px;
+}
+
+hr {
+	border:1px solid #dadde1;
+}
+
+.login-form-item.login-label {
+	font-size:24px;
+}
+
+.login-form-item{
+	display:flex;
+	justify-content:center;
+	align-items:center;
 }

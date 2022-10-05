@@ -1,0 +1,73 @@
+{% extends 'base.html'%}
+{% block main %}	
+<form action="/populate/" method='POST' style='display:none;'>
+		<button type="submit">POPULATE!</button>
+	</form>
+
+	<div class="user-entry-form">
+		<div class="form-container">
+			<form name="user_details_form" action="/friends-match/" method='POST'>
+				
+				<div class="input-container">
+					<h4 class="input-label">Name</h4>
+					<input type="text" name="user_name">
+				</div>
+				
+				<div class="input-container">
+					<h4 class="input-label">Age</h4>
+					<input type="number" name="user_age">
+				</div>
+				
+				<div class="input-container">
+					<h4 class="input-label">Favourite Colour</h4>
+					<select name="favourite_colour">
+						{% for x in range( 0,colour_options|length) %}
+						<option value='{{ colour_options[x] }}'>{{ colour_options[x] }} </option>
+							
+						{%  endfor %}
+					</select>
+				</div>
+				
+				<div class="input-container">
+					<h4 class="input-label">Favourite Food</h4>
+					<select name="favourite_food">
+						{% for x in range( 0,food_options|length) %}
+						<option value='{{ food_options[x] }}'>{{ food_options[x] }}
+						</option>
+							
+						{%  endfor %}
+					</select>
+				</div>
+				
+				<div class="input-container">
+					<h4 class="input-label">Favourite Sport</h4>
+					<select name="favourite_sport">
+						{% for x in range( 0,sport_options|length) %}
+						<option value='{{ sport_options[x] }}'>{{ sport_options[x] }}
+						</option>
+							
+						{%  endfor %}
+					</select>
+				</div>
+
+				<button type="submit">Submit</button>
+
+
+			</form>
+
+
+		</div>
+      
+		<div class="filter-form">
+      <form name="user_details_form" action="/" method='POST'>
+				
+				
+				
+				
+				
+
+			</form>
+    </div>
+	</div>
+</body>
+{% endblock %}
