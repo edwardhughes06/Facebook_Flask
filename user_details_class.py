@@ -5,3 +5,4 @@ class user_details:
 		self.favourite_colour = favourite_colour
 		self.favourite_food = favourite_food
 		self.favourite_sport = favourite_sport
+

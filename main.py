@@ -1,11 +1,13 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import InputRequired, Email, Length
-import email_validator
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
+from sqlalchemy.sql import func
+
 import sqlite3
 from sqlitemodel import Model, Database
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,10 +19,10 @@ from user_details_class import user_details
 import csv
 import random
 
-
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Mattisthebestprogrammerintheworld!'
+app.config['SECRET'] = 'Mattisthebestprogrammerintheworld!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user_database.db'
+
 Bootstrap(app)
 
 db = SQLAlchemy(app)
@@ -28,327 +30,327 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-user_file = "users.json"
 
-
-def write_json(new_data,array_name, filename=user_file):
-		global  last_id
-		with open(filename,'r+') as file:
-			
-			file_data = json.load(file)
-			
-			file_data[array_name].append(new_data)
-			# Sets file's current position at offset.
-			file.seek(0)
-			# convert back to json.
-			json.dump(file_data, file, indent = 4)
-
-def get_next_id():
-	user_file = "users.json"
-	last_id = 0
-	
-	with open(user_file,'r+') as file:
-			
-		file_data = json.load(file)
-		
-		for item in file_data["user_details"]:
-			last_id = item['id'] 
-					
-	return last_id +1
-
-def load_json(value_name, file=user_file):
-	last_id = 0
-	values_in_name = []
-	with open(file,'r+') as file:
-			
-		file_data = json.load(file)
-		
-		for item in file_data["user_details"]:
-			values_in_name.append(item[value_name] )
-					
-	return values_in_name
-
-def populate():
-
-	colour_options = ["Red","Orange","Yellow","Green","Blue","Indigo","Violet"]
-	food_options = ["Chips","Doughnuts","Ice Cream","Chicken Nuggets","Pizza","Burgers","Steak","Sausages"]
-	sport_options = ["Football","Rugby","Cricket","Badminton","Cycling","Tennis","Basketball"]
-	
-	next_id = get_next_id()
-	
-	def read_common_names(increment):
-		with open('common_names.csv', 'r') as names:
-			rows = list(names)
-			return rows[increment].rstrip('\n')
-
-	for i in range (0,1133):
-		next_id = get_next_id()
-		user_details.name = read_common_names(i).lower()
-		user_details.age = random.randint(10,50)
-		user_details.favourite_colour = colour_options[random.randint(0,len(colour_options)-1)]
-		user_details.favourite_food = food_options[random.randint(0,len(food_options)-1)]
-		user_details.favourite_sport = sport_options[random.randint(0,len(sport_options)-1)]
-		
-		
-		dictionary = {
-			"id":next_id,
-			"name": user_details.name,
-			"age": user_details.age,
-			"favourite_colour":user_details.favourite_colour,
-			"favourite_food":user_details.favourite_food,
-			"favourite_sport":user_details.favourite_sport,
-	
-	
-		}
-
-		write_json(dictionary, array_name="user_details",filename="users.json")
-			
-
-def get_user_input():
-	
-	next_id = get_next_id()
-	
-	user_details.name = request.form["user_name"].lower()
-	user_details.age = int(request.form["user_age"])
-	user_details.favourite_colour = request.form["favourite_colour"]
-	user_details.favourite_food = request.form["favourite_food"]
-	user_details.favourite_sport = request.form["favourite_sport"]
-
-	# if user_details.name in load_json("name"):
-	# 	if user_details.age in load_json("age"):
-	# 		if user_details.favourite_colour in load_json("favourite_colour"):
-	# 			if user_details.favourite_food in load_json("favourite_food"):
-	# 				if user_details.favourite_sport in load_json("favourite_sport"):
-	# 					duplicate = True
-	# 					# If duplicate return duplicate
-					
-		
-
-	dictionary = {
-	"id":next_id,
-	"name": user_details.name,
-	"age": user_details.age,
-	"favourite_colour":user_details.favourite_colour,
-	"favourite_food":user_details.favourite_food,
-	"favourite_sport":user_details.favourite_sport,
-	
-	
-	}
-
-	write_json(dictionary, array_name="user_details",filename="users.json")
-
-
-def filter_by():
-
-	user_details.name = request.form["user_name"].lower()
-	user_details.age = int(request.form["user_age"])
-	user_details.favourite_colour = request.form["favourite_colour"]
-	user_details.favourite_food = request.form["favourite_food"]
-	user_details.favourite_sport = request.form["favourite_sport"]
-	
-	
-	filter_options= ["name","age","favourite_colour","favourite_food","favourite_sport"]
-	
-	
-	with open("users.json","r+") as file:
-		
-		file_data = json.load(file)
-		
-		name_match = []
-		age_match = []
-		colour_match = []
-		food_match = []
-		sport_match = []
-		
-		for selection in filter_options:
-			for item in file_data["user_details"]:
-				if selection == "name":
-					if user_details.name == item["name"]:
-						name_match.append(item["id"])
-				elif selection == "age":
-					if user_details.age == item["age"]:
-						age_match.append(item["id"])
-						
-				elif selection == "favourite_colour":
-					if user_details.favourite_colour == item["favourite_colour"]:
-						colour_match.append(item["id"])
-						
-				elif selection == "favourite_food":
-					if user_details.favourite_food == item["favourite_food"]:
-						food_match.append(item["id"])
-						
-				elif selection == "favourite_sport":
-					if user_details.favourite_sport == item["favourite_sport"]:
-						sport_match.append(item["id"])
-		this_id = get_next_id()-1
-		dictionary = {
-			"id":this_id,
-			"same_name" : name_match,
-			"same_age" : age_match,
-			"same_colour" : colour_match,
-			"same_food" : food_match,
-			"same_sport" : sport_match,
-			
-		}
-	file.close()
-	write_json(dictionary, array_name="likeness",filename="likeness.json")
-					
-
-def most_like(user_id):
-	with open("likeness.json","r+") as file:
-
-		friend_list = []
-		
-		file_data = json.load(file)
-
-		for item in file_data["likeness"]:
-			if item["id"] == user_id:
-				# if same age and same colour
-				
-				for x in range(0,len(item["same_age"])):
-					if item["same_age"][x] in item["same_colour"] and item["same_age"][x] not in friend_list:
-						friend_list.append(item["same_age"][x])
-						break
-				# if same food and sport
-				for x in range(0,len(item["same_food"])):
-					if item["same_food"][x] in item["same_sport"] and item["same_food"][x] not in friend_list:
-						friend_list.append(item["same_food"][x])
-						break
-				# same age and sport
-				for x in range(0,len(item["same_age"])):
-					if item["same_age"][x] in item["same_sport"] and item["same_age"][x] not in friend_list:
-						friend_list.append(item["same_age"][x])
-						break
-				# same sport and colour
-				for x in range(0,len(item["same_sport"])):
-					if item["same_sport"][x] in item["same_colour"] and item["same_sport"][x] not in friend_list:
-						friend_list.append(item["same_sport"][x])
-						break
-
-	print("friend list is",friend_list)
-	return friend_list
-
-def get_friend_details_for_html(friend_list):
-	aggregate_list = []
-	
-	with open("users.json","r") as file:
-		file_data = json.load(file)
-	
-	for id in friend_list:
-		for item in file_data["user_details"]:
-			if id == item["id"]:
-				aggregate_list.append(item["id"])
-				aggregate_list.append(item["name"])
-				aggregate_list.append(item["age"])
-				aggregate_list.append(item["favourite_colour"])
-				aggregate_list.append(item["favourite_food"])
-				aggregate_list.append(item["favourite_sport"])
-
-	print(aggregate_list)
-
-	return aggregate_list
-			
 class User(UserMixin, db.Model):
-	id = db.Column(db.Integer, primary_key= True)
-	username = db.Column(db.String(15), unique=True)
-	email = db.Column(db.String(50), unique=True)
-	password = db.Column(db.String(80))
+    __tablename__ = "User"
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(20))
+    username = db.Column(db.String(25), unique=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(80))
+
+
+class UserDetails(db.Model):
+    __tablename__ = "UserDetails"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    favourite_colour = db.Column(db.String(10))
+    favourite_food = db.Column(db.String(10))
+    favourite_sport = db.Column(db.String(10))
+
+
+class Friendships(db.Model):
+    __tablename__ = "Friendships"
+    id = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer)
+    friend = db.Column(db.Integer)
+
+
+def get_user_details_list(list_of_ids):
+    details_list = []
+    for x in list_of_ids:
+        userTable = User.query.filter_by(id=x).first()
+        userDetails = UserDetails.query.filter_by(user_id=x).first()
+        details_list.append(userTable.first_name)
+        details_list.append(userTable.username)
+        details_list.append(userDetails.favourite_colour)
+        details_list.append(userDetails.favourite_food)
+        details_list.append(userDetails.favourite_sport)
+    return details_list
+
+
+def get_user_prefrences(id):
+    current_userDetails = UserDetails.query.filter_by(user_id=id).first()
+    return current_userDetails
+
+
+def appendIfNotIn(list, entry):
+    if entry not in list and entry != current_user.get_id():
+        list.append(entry)
+
+
+def find_friends(current_user_id):
+    userDetails = get_user_prefrences(current_user_id)
+    friendList = []
+
+    for x in range(0, 8):
+        similar_colour = UserDetails.query.filter_by(
+            favourite_colour=userDetails.favourite_colour).order_by(
+                func.random()).first()
+        similar_food = UserDetails.query.filter_by(
+            favourite_food=userDetails.favourite_food).order_by(
+                func.random()).first()
+        similar_sport = UserDetails.query.filter_by(
+            favourite_sport=userDetails.favourite_sport).order_by(
+                func.random()).first()
+
+        appendIfNotIn(friendList, similar_colour.user_id)
+        appendIfNotIn(friendList, similar_food.user_id)
+        appendIfNotIn(friendList, similar_sport.user_id)
+
+    return get_user_details_list(friendList), friendList
+
+
+def add_friend(friend_id):
+    new_user = Friendships(userId=current_user.get_id(), friend=friend_id)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return redirect(url_for('dashboard'))
+
+
+def get_friend_list(user_id):
+    friend_list = []
+    friendships = Friendships.query.filter_by(userId=user_id).all()
+    for user in friendships:
+        appendIfNotIn(friend_list, user.friend)
+
+    return friend_list, get_user_details_list(friend_list)
+
+
+def remove_friend(user_id, friend_id):
+    Friendships.query.filter_by(userId=user_id, friend=friend_id).delete()
+    db.session.commit()
+
+
+def return_search_results_friends(search_entry):
+    friend_search = User.query.filter(
+        or_(User.username == search_entry,
+            User.first_name == search_entry)).all()
+    results_list = []
+    for results in friend_search:
+        appendIfNotIn(results_list, results.id)
+    return get_user_details_list(results_list), results_list
+
 
 @login_manager.user_loader
 def load_user(user_id):
-	return User.query.get(int(user_id))
+    return User.query.get(int(user_id))
+
 
 class LoginForm(FlaskForm):
-	username = StringField('',validators=[InputRequired(), Length(min=4,max=16)])
-	password = PasswordField('',validators=[InputRequired(),Length(min=8,max=80)])
-	remember = BooleanField('Remember me')
+    username = StringField('',
+                           validators=[InputRequired(),
+                                       Length(min=4, max=16)])
+    password = PasswordField(
+        '', validators=[InputRequired(),
+                        Length(min=8, max=80)])
+    remember = BooleanField('Remember me')
+
 
 class RegisterForm(FlaskForm):
-	email = StringField('', validators=[InputRequired(), Email(message="invalid email"),Length(max=50)])
-	username = StringField('', validators=[InputRequired(), Length(min=4,max=16)])
-	password = PasswordField('', validators=[InputRequired(),Length(min=8,max=80)])
+    first_name = StringField(
+        '', validators=[InputRequired(),
+                        Length(min=4, max=16)])
+    email = StringField('',
+                        validators=[
+                            InputRequired(),
+                            Email(message="invalid email"),
+                            Length(max=50)
+                        ])
+    username = StringField('',
+                           validators=[InputRequired(),
+                                       Length(min=4, max=16)])
+    password = PasswordField(
+        '', validators=[InputRequired(),
+                        Length(min=8, max=80)])
 
-@app.route('/',methods=['GET','POST'])
+
+colour_options = [
+    "Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"
+]
+food_options = [
+    "Chips", "Doughnuts", "Ice Cream", "Chicken Nuggets", "Pizza", "Burgers",
+    "Steak", "Sausages"
+]
+sport_options = [
+    "Football", "Rugby", "Cricket", "Badminton", "Cycling", "Tennis",
+    "Basketball"
+]
+
+
+class SetupForm(FlaskForm):
+    favourite_colour = SelectField(choices=colour_options)
+    favourite_food = SelectField(choices=food_options)
+    favourite_sport = SelectField(choices=sport_options)
+
+def populate_db():
+    colour_options = [
+        "Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"
+    ]
+    food_options = [
+        "Chips", "Doughnuts", "Ice Cream", "Chicken Nuggets", "Pizza",
+        "Burgers", "Steak", "Sausages"
+    ]
+    sport_options = [
+        "Football", "Rugby", "Cricket", "Badminton", "Cycling", "Tennis",
+        "Basketball"
+    ]
+
+    for i in range(0, 1000):
+        hashed_password = generate_password_hash(read_common_names(i),
+                                                 method='sha256')
+        user_email = read_common_names(i) + '@email.com'
+        new_username = read_common_names(i) + str(random.randint(1, 100))
+        new_user = User(first_name=read_common_names(i),
+                        username=new_username,
+                        email=user_email,
+                        password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        user_prefrences = UserDetails(
+            user_id=i + 1,
+            favourite_colour=colour_options[random.randint(
+                0,
+                len(colour_options) - 1)],
+            favourite_food=food_options[random.randint(0,
+                                                       len(food_options) - 1)],
+            favourite_sport=sport_options[random.randint(
+                0,
+                len(sport_options) - 1)])
+        db.session.add(user_prefrences)
+        db.session.commit()
+
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-	return redirect(url_for('login'))
+    return redirect(url_for('login'))
 
 
-@app.route('/oldindex/', methods=['GET','POST'])
-def oldindex():
-	if request.method == 'POST':
-		# similar_person()
-		# filter_by_characteristics(request.form["filter_select"])
-		pass
-		
-
-		
-	colour_options = ["Red","Orange","Yellow","Green","Blue","Indigo","Violet"]
-	food_options = ["Chips","Doughnuts","Ice Cream","Chicken Nuggets","Pizza","Burgers","Steak","Sausages"]
-	sport_options = ["Football","Rugby","Cricket","Badminton","Cycling","Tennis","Basketball"]
-	filter_options= ["name","age","favourite_colour","favourite_food","favourite_sport"]
-	return render_template("oldindex.html" ,filter_options=filter_options,colour_options=colour_options, food_options=food_options, sport_options=sport_options)
-
-
-@app.route('/friends-match/',methods=['GET','POST'])
-def match_results():
-	aggregate_list = []
-	if request.method == 'POST':
-		get_user_input()
-		this_id = get_next_id()-1
-		filter_by()
-		aggregate_list = get_friend_details_for_html(most_like(this_id))
-
-	friend_card_prefixes = ["User ID:  ","Name:  ","Age:  ","Favourite Colour:  ", "Favourite Food:  ","Favourite Sport:  "]
-	return render_template('friends-match.html',friend_card_prefixes=friend_card_prefixes ,user_details=user_details,aggregate_list=aggregate_list)
-
-@app.route('/populate/',methods=['GET','POST'])
+@app.route('/populate/', methods=['GET', 'POST'])
 def populate_table():
-	if request.method == 'POST':
-		
-		populate()
+    populate_db()
+    return "done"
 
-	return render_template('index.html',user_details=user_details)
 
-@app.route('/sign-up/',methods=['GET','POST'])
-def sign_up():
-	form = RegisterForm()
-
-	if form.validate_on_submit():
-		hashed_password = generate_password_hash(form.password.data, method='sha256')
-		new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-		db.session.add(new_user)
-		db.session.commit()
-		
-
-		return "new user has been created"
-		
-	return render_template('sign-up.html',form=form)
-
-@app.route('/login/', methods=['GET','POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
-	form = LoginForm()
+    form = LoginForm()
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    elif form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for('dashboard'))
 
-	if form.validate_on_submit():
-		user = User.query.filter_by(username=form.username.data).first()
-		if user:
-			if check_password_hash(user.password, form.password.data):
-				login_user(user, remember=form.remember.data)
-				return redirect(url_for('dashboard'))
+        return '<h1>Invalid Username or password</h1>'
 
-		return '<h1>Invalid Username or password</h1>'
-	
-	return render_template('login.html',form=form)
+    return render_template('login.html', form=form)
 
-@app.route('/dashboard/', methods=['GET','POST'])
+
+@app.route('/sign-up/', methods=['GET', 'POST'])
+def sign_up():
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data,
+                                                 method='sha256')
+        new_user = User(first_name=form.first_name.data,
+                        username=form.username.data,
+                        email=form.email.data,
+                        password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        login()
+
+        return redirect(url_for('user_setup'))
+
+    return render_template('sign-up.html', form=form)
+
+
+@app.route('/sign-up/setup', methods=['GET', 'POST'])
+@login_required
+def user_setup():
+    form = SetupForm()
+    if form.validate_on_submit():
+        user_prefrences = UserDetails(
+            user_id=current_user.get_id(),
+            favourite_colour=form.favourite_colour.data,
+            favourite_food=form.favourite_food.data,
+            favourite_sport=form.favourite_sport.data)
+        db.session.add(user_prefrences)
+        db.session.commit()
+
+        return redirect(url_for('dashboard'))
+
+    return render_template('user-setup.html',
+                           name=current_user.username,
+                           first_name=current_user.first_name,
+                           form=form)
+
+@app.route('/chat/', methods=['GET', 'POST'])
+@app.route('/chat/<friend_id>', methods=['GET', 'POST'])
+def chat(friend_id=None):
+	friend_details = None
+	friend_name = None
+	friend_list, friend_details_list = get_friend_list(current_user.get_id())
+	if friend_id:
+		friend_details = User.query.filter_by(id=friend_id).first()
+		friend_name=friend_details.first_name
+
+	return render_template('chat.html',friend_name=friend_name,friend_id=friend_id, friend_list=friend_list, friend_details_list=friend_details_list, first_name=current_user.first_name)
+
+
+
+
+@app.route('/dashboard/', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-	return render_template('dashboard.html', name=current_user.username)
+    search_results = None
+    search_ids = []
+    search_query = "Search for new friends:"
+    if request.method == 'POST':
+        friend_to_remove = request.form.get("remove-friend")
+        if friend_to_remove:
+            remove_friend(current_user.get_id(), friend_to_remove)
+
+        friend_id = request.form.get("friend-id-input")
+        if friend_id:
+            add_friend(friend_id)
+        search_query = request.form.get("friend-search")
+        if search_query:
+            search_results, search_ids = return_search_results_friends(
+                search_query)
+    similarFriends, id_similar_list = find_friends(current_user.get_id())
+    friend_list, friend_details_list = get_friend_list(current_user.get_id())
+
+    return render_template('dashboard.html',
+							search_query=str(search_query),
+							search_ids=search_ids,
+							search_results=search_results,
+							friend_details_list=friend_details_list,
+							friend_list=friend_list,
+							id_similar_list=id_similar_list,
+							similarFriends=similarFriends,
+							username=current_user.username,
+							first_name=current_user.first_name)
+
 
 @app.route('/logout/')
 @login_required
 def logout():
-	logout_user()
-	return redirect(url_for('index'))
+    logout_user()
+    return redirect(url_for('index'))
 
 
-app.run(host='0.0.0.0', port=81,debug=True)
+@app.route('/preferences/', methods=['GET', 'POST'])
+@login_required
+def preferences():
+
+    return render_template('preferences.html', name=current_user.username)
+
+
+app.run(host='0.0.0.0', port=81, debug=True)

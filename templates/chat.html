@@ -1,0 +1,46 @@
+{% extends 'base.html'%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block main %}
+
+<div class="chat-page">
+	<div class="chat-sidebar">
+		
+		<div class="section title-main">
+			<h2>Chat with your friends</h2>
+		</div>
+		{% for x in range(0,friend_list|length) %}
+			<div class="section">
+				<a class="chat-sidebar-friend-button" href="{{url_for('chat',friend_id=friend_list[x])}}">
+			      		<img class="profile-pic chat-pic flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
+				
+					<h3 style="padding-left:10px">{{friend_details_list[x*5]}}</h3>
+					
+				</a>
+					
+			</div>
+		{% endfor %}
+	</div><!--
+--><div class="chat-main-panel">
+	{% if friend_id %}	
+	<div class="chat-room">
+		<div class="top-bar">You are talking to:{{friend_name}}</div>
+		<div class="message-container">
+			
+		</div>
+		<div class="chat-box">
+			<input typr="text">
+		</div>
+	</div>
+	{% else %}
+	<div class="none-selected">
+			<h2>Select a friend to start a chat!</h2>
+		</div>
+	</div>
+	{% endif %}
+</div>
+
+
+
+
+{% endblock %}

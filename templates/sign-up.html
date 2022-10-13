@@ -2,32 +2,56 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block main%}
-
-<div class="sign-up-form-container">
-	<div class="form-holder">
-		<form name="sign-up-form" action="/sign-up/" method='POST'>
-			{{ form.hidden_tag() }}
-			<div class="input-container sign-up">
-				<h4 class="input-label">First Name</h4>
-				{{ wtf.form_field(form.username) }}
-			</div>
-			<div class="input-container sign-up">
-				<h4 class="input-label">Email Address</h4>
-				{{ wtf.form_field(form.email) }}
-			</div>
-
-			<div class="input-container sign-up">
-				<h4 class="input-label">Password</h4>
-				{{ wtf.form_field(form.password) }}
+<h1>Sign Up</h1>
+<div class="login-page">
+	<div class="login-form-container">
+		<div class="login-form-item">
+			<div class="total-form">
+				<form name="login-form" action="/sign-up/" method='POST'>
+				{{ form.hidden_tag() }}
 				
+  				<div class="input-container login">
+				{{ wtf.form_field(form.first_name , placeholder="First Name")}}
+            
+  				</div>
+  			
+  				<div class="input-container login">
+				{{ wtf.form_field(form.username , placeholder="Username")}}
+            
+  				</div>
+          <div class="input-container login">
+				{{ wtf.form_field(form.email, placeholder="Email Address") }}
+            
+  				</div>
+          <div class="input-container login">
+				{{ wtf.form_field(form.password, placeholder="Password") }}
 				
+            
+  				</div>
+  				
+  				<button class="sign-up-button login" type="submit">Sign Up</button>
+  				<hr>
+  				
+  			</form>
+  			<a href="/login/">
+          <button class="login-button login">Existing user? Login</button>
+        </a>
 			</div>
-			<button class="sign-up-button" type="submit">Sign Up</button>
-		</form>
+			
+			
+		</div>
 	</div>
+	
 </div>
 
-/
+
+
+
+
+
+
+
+
 
 
 

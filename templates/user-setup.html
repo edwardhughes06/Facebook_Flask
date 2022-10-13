@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block main%}
+
+<div class="user-details-page">
+	<h1>Hello {{name}}</h1>
+	<div class="floating-box center">
+			<form name="setup-form" action="/sign-up/setup" method='POST'>
+				{{ form.hidden_tag() }}
+				
+  				<div class="input-container">
+  						{{ wtf.form_field(form.favourite_colour, placeholder="Username", extra_classes='login-input') }}
+  				</div>
+				<div class="input-container">
+  						{{ wtf.form_field(form.favourite_food, placeholder="Username", extra_classes='login-input') }}
+  				</div>
+				<div class="input-container">
+  						{{ wtf.form_field(form.favourite_sport, placeholder="Username", extra_classes='login-input') }}
+  				</div>
+				<button class="form-submit" type="submit">Save Preferences</button>
+			</form>
+		
+	</div>
+</div>
+
+{% endblock %}

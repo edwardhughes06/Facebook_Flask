@@ -6,6 +6,8 @@ header {
 }
 body {
 	background-color:#f0f2f5;
+  overflow-x: hidden;
+  margin: 0;
 }
 h1 {
 	font-family: Helvetica;
@@ -68,7 +70,7 @@ body {
 }
 
 input {
-	height:75%;
+	/*height:75%;*/
 }
 
 .error{
@@ -161,6 +163,7 @@ input:focus {
 	color: white;
 	padding: 5px 15px;
 	display:block;
+	margin: 20px;
 }
 .add-button:hover {
 	background-color:#338c21;
@@ -171,7 +174,8 @@ input:focus {
 	border:none;
 	color: white;
 	padding: 5px 15px;
-	display:none;
+	margin-top: 20px;
+	margin-bottom: 10px;
 }
 .remove-button:hover {
 	background-color:#bd0000;
@@ -182,18 +186,18 @@ input:focus {
 	overflow-y:hidden;
 }
 .login-form-container {
-	margin-top:40%;
 	display:flex;
 	gap: 100px;
 	width:fit-content;
 	margin:auto;
-	margin-top:15vh;
 	padding-top:40px;
 }
-
+.marg-top {
+  margin-top: 15vh;
+}
 
 .login-form-item >.total-form {
-	padding:30px;
+	padding:30px 60px;
 	background-color: #fff;
 	border: none;
 	border-radius: 8px;
@@ -221,6 +225,23 @@ input:focus {
 	border:none;
 	border-radius:6px;
 }
+button {
+	font-size: 18px;
+	color:white;
+	padding:14px 16px;
+	border:none;
+	border-radius:6px;
+}
+
+button.blue{
+	background-color: #3b5998;
+	
+}
+button:hover {
+  background-color:#263963;
+	
+}
+
 .login-button:hover {
   background-color:#263963;
 }
@@ -249,3 +270,326 @@ hr {
 	justify-content:center;
 	align-items:center;
 }
+
+
+.side-bar{
+
+	margin:0;
+	box-sizing:border-box;
+	padding:0;
+	width:200px;
+	height:100%;
+	overflow:auto;
+	border-right:2px solid #ececec;
+	position:fixed;
+	left:0;
+  padding-top: 20px;
+}
+
+.main-content {
+	margin-left:200px;
+	width:80%;
+	padding:0 20px;
+
+}
+
+.top-bar {
+	min-height:100px;
+	background-color:#ececec;
+}
+.text-left {
+	text-align:left;
+}
+
+.header-flex {
+	display:flex;
+	align-items:center;
+	gap:5px;
+	
+}
+
+.dropdown-items {	
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+  
+}
+
+.dropdown:hover .dropdown-items {
+  display: block;
+}
+
+.dropdown-items a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+button.dropdown-header {
+	all:unset;
+	font-size:18px;
+}
+
+button.dropdown-header:hover {
+	color:#dedede;
+}
+
+.floating-box {
+	padding:30px;
+	background-color: #fff;
+	border: none;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+	width:fit-content;
+}
+
+.floating-box.center{
+	margin:auto !important;
+}
+.form-submit {
+	font-size: 18px;
+	color:white;
+	padding:14px 16px;
+	width: 100%;
+	background-color: #3b5998;
+	border:none;
+	border-radius:6px;
+}
+.form-submit:hover {
+  background-color: #263963;
+}
+
+.profile-pic-container {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 150px;
+  position: relative;
+  
+}
+.profile-pic {
+  border-radius: 50%;
+  max-width: 100%;
+  position: absolute !important;
+  left:0;
+}
+.profile-pic.small {
+  max-width: 33%;
+	
+}
+.profile-pic.small.flex, .profile-pic.chat-pic.flex{
+	position:unset !important;
+}
+.edit-profile-pic {
+  border-radius: 50%;
+  z-index: 9;
+  padding-top: 100%;
+}
+.profile-pic:hover + .edit-profile-pic{
+    background-color: #737373;
+    opacity: 0.8;
+}
+.edit-text {
+  display:none;
+  margin:0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 24px;
+}
+
+.profile-pic:hover + .edit-profile-pic>.edit-text{
+  display:block;
+}
+.side-link {
+  color: black;
+  font-size: 16px;
+}
+.side-link:hover {
+  color: #b0b2b2;
+}
+.friend-suggestions {
+  position: relative;
+}
+.pad-20 {
+  padding-left: 20px;
+}
+.side-line {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.dropdown-item:hover {
+  background-color: #d2d3d6;
+}
+.suggestion-card {
+  min-width: 200px;
+	max-width:200px;
+  height: fit-contentpx;
+	padding:10px 0;
+  display: flex;
+  border: none;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+  margin: 0px 10px;
+  position: relative;
+	flex-direction:column;
+	align-items:center;
+}
+.suggestion-container {
+  height: auto;
+  width: auto;
+  display: flex;
+  padding: 10px;
+	overflow:scroll;
+	overflow-y:hidden;
+}
+
+.search-container {
+  width:fit-content;
+}
+
+.chaticon {
+	margin-bottom: 20px;
+	color: black;
+}
+.chaticon:hover {
+	color:#b0b0b0;
+}
+
+
+.search-results {
+	display:flex;
+}
+
+.search-field {
+	padding-left:20px;
+	min-width:30vw;
+}
+.search-field-container {
+	padding-left:20px;
+	width:100%;
+	display:flex;
+}
+
+.left {
+	text-align:left;
+}
+
+.top-bar {
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	text-align:center;
+}
+
+/* ALL CSS FOR CHAT MUST BE IN HERE */
+
+:root {
+	--chat-app-height: calc(100vh - 80px);
+	--chat-app-sidebar-width:350px;
+}
+
+.chat-page {
+	max-height: var(--chat-app-height);
+}
+
+.chat-sidebar{
+	display: inline-block;
+	vertical-align: top;
+	height: var(--chat-app-height);
+	width: 18%;
+	overflow-y: auto;
+	box-sizing:border-box;
+	border-right:solid black 4px;
+}
+.chat-main-panel {
+	display: inline-block;
+	vertical-align: top;
+	height:  var(--chat-app-height);
+	width: 82%;
+	overflow: auto;
+
+	
+}
+
+.section {
+	height:100px;
+	background: #f0f2f5;
+	display:flex;
+	align-content:center;
+}
+
+div.chat-sidebar>div:nth-of-type(even) {
+	background:#e8edf4;
+}
+
+.section.title-main {
+	text-align:left;
+	align-items:center;
+	margin-left:5px;
+	position: sticky;
+  	top:0;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+	
+
+}
+
+div.chat-main-panel>div.none-selected{
+	display:flex;
+	align-items: center;
+    justify-content: center;
+	height:100%;
+	background:#0000002e;
+}
+.chat-sidebar-friend-button {
+	width:100%;
+	background: transparent;
+	color:black;
+	padding:0;
+	border-radius:0;
+	display:flex;
+	align-items:center;
+	margin: 10px;
+}
+div.chat-sidebar-friend-buttonr>div:nth-of-type(even) {
+	background:transparent;
+	
+}
+
+.chat-sidebar-friend-button:hover {
+	background:#ffff;
+}
+
+.profile-pic.chat-pic {
+	width: auto;
+	height:75%;
+} 
+
+.chat-room{
+	display:flex;
+	flex-direction:column;
+}
+
+.chat-room>.top-bar{
+	position:absolute;
+	margin-top:80px;
+	top:0;
+	width:82%;
+	height:50px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+	
+}
+.chat-room>.chat-box{
+	position:absolute;
+	bottom:0;
+	height:50px;
+	width:82%;
+	background: #3b5998;
+/* END CHAT CSS */
