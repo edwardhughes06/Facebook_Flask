@@ -26,10 +26,30 @@
 	<div class="chat-room">
 		<div class="top-bar">You are talking to:{{friend_name}}</div>
 		<div class="message-container">
+			{% for chat in all_chats %}
+				
+				{% if chat.sender_id |int == user_id|int %}
+				
+					<p class="message-delivered">{{chat.message_text}}</p>
+				
+				{% else %}
+				
+					<p class="message-recieved">{{chat.message_text}}</p>
+				
+				{% endif %}
+			{% endfor %}
 			
 		</div>
 		<div class="chat-box">
-			<input typr="text">
+			<div class="message-box">
+				<form name="send-message"action="{{url_for('chat',friend_id=friend_id)}}" method='POST'>				
+				{{ form.hidden_tag() }}
+				
+					{{ wtf.form_field(form.message_input ,class="input chat-input", placeholder=friend_name)}}
+				
+				<button class="send-message-button"type="submit">Send</button>
+				</form>
+			</div>
 		</div>
 	</div>
 	{% else %}

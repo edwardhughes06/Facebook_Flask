@@ -95,7 +95,7 @@
 						  </div>
 					  {% endfor %}
 					<form name="add-friend-button" action="" method='POST'>
-						<input style="display:none"type="number" name="friend-id-input" value={{id_similar_list[x]}}>
+						<input style="display:none"type="number" name="friend-id-input" value={{search_ids[x]}}>
 						<button type="submit" class="add-button">Add Friend</button>
 					</form>
 					<a href="{{url_for('chat',friend_id=search_ids[x])}}"><i class="chaticon bi bi-chat"></i></a>

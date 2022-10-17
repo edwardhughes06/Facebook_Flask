@@ -5,9 +5,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import or_
+from sqlalchemy import or_,and_, func, DateTime
 from sqlalchemy.sql import func
 
+import datetime
 import sqlite3
 from sqlitemodel import Model, Database
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -20,7 +21,7 @@ import csv
 import random
 
 app = Flask(__name__)
-app.config['SECRET'] = 'Mattisthebestprogrammerintheworld!'
+app.config['SECRET_KEY'] = 'Mattisthebestprogrammerintheworld!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user_database.db'
 
 Bootstrap(app)
@@ -55,6 +56,14 @@ class Friendships(db.Model):
     userId = db.Column(db.Integer)
     friend = db.Column(db.Integer)
 
+class ChatLog(db.Model):
+	__tablename__ = "ChatLog"
+	id = db.Column(db.Integer, primary_key=True)
+	sender_id = db.Column(db.Integer)
+	reciever_id = db.Column(db.Integer)
+	message_text = db.Column(db.String(160))
+	date_sent = db.Column(DateTime(timezone=False), server_default=func.now())
+	
 
 def get_user_details_list(list_of_ids):
     details_list = []
@@ -125,13 +134,35 @@ def remove_friend(user_id, friend_id):
 
 def return_search_results_friends(search_entry):
     friend_search = User.query.filter(
-        or_(User.username == search_entry,
-            User.first_name == search_entry)).all()
+        or_(func.lower(User.username) == func.lower(search_entry),
+            func.lower(User.first_name) == func.lower(search_entry))).all()
     results_list = []
     for results in friend_search:
         appendIfNotIn(results_list, results.id)
     return get_user_details_list(results_list), results_list
 
+def get_chatlog(senderId, recieverId):
+	sent_messages = []
+	received_messages = []
+	all_chats = ChatLog.query.where(
+		(ChatLog.sender_id==int(senderId)) & (ChatLog.reciever_id==int(recieverId)) | (ChatLog.sender_id==int(recieverId)) & (ChatLog.reciever_id==int(senderId)) ).all()
+	for message in all_chats:
+		print(message.sender_id,message.reciever_id)
+		if message.sender_id == int(senderId) and message.reciever_id == int(recieverId):
+			sent_messages.append(message.message_text)
+			
+		if message.sender_id == int(recieverId) and message.reciever_id == int(senderId):
+			received_messages.append(message.message_text)
+			
+	print("messages",sent_messages, received_messages)
+	return sent_messages , received_messages, all_chats
+
+def send_message(sender_id, reciever_id,message):
+	print(sender_id, reciever_id,message)
+	new_message = ChatLog(sender_id=sender_id,reciever_id=reciever_id,message_text=message, date_sent=func.now())
+	print(new_message)
+	db.session.add(new_message)
+	db.session.commit()
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -164,7 +195,8 @@ class RegisterForm(FlaskForm):
     password = PasswordField(
         '', validators=[InputRequired(),
                         Length(min=8, max=80)])
-
+class SendMessage(FlaskForm):
+	message_input = StringField('', validators=[InputRequired(),Length(min=1,max=160)])
 
 colour_options = [
     "Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"
@@ -290,18 +322,28 @@ def user_setup():
                            name=current_user.username,
                            first_name=current_user.first_name,
                            form=form)
-
+@login_required
 @app.route('/chat/', methods=['GET', 'POST'])
 @app.route('/chat/<friend_id>', methods=['GET', 'POST'])
 def chat(friend_id=None):
+	user_id = current_user.get_id()
+	print(user_id)
+	form = SendMessage()
 	friend_details = None
 	friend_name = None
+	all_chats=None
+	sent_messages, received_messages = [], []
 	friend_list, friend_details_list = get_friend_list(current_user.get_id())
 	if friend_id:
 		friend_details = User.query.filter_by(id=friend_id).first()
 		friend_name=friend_details.first_name
+		if form.validate_on_submit():
+			send_message(sender_id=current_user.get_id(), reciever_id=friend_id,message=form.message_input.data)
+		sent_messages, received_messages,all_chats = get_chatlog(current_user.get_id(), friend_id)
+		
+	
 
-	return render_template('chat.html',friend_name=friend_name,friend_id=friend_id, friend_list=friend_list, friend_details_list=friend_details_list, first_name=current_user.first_name)
+	return render_template('chat.html',user_id=user_id,all_chats=all_chats, form=form,sent_messages=sent_messages,received_messages=received_messages,friend_name=friend_name,friend_id=friend_id, friend_list=friend_list, friend_details_list=friend_details_list, first_name=current_user.first_name)
 
 
 
