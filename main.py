@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
+import os
+from pml import app
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SelectField
@@ -394,5 +396,5 @@ def preferences():
 
     return render_template('preferences.html', name=current_user.username)
 
-
-app.run(host='0.0.0.0', port=81, debug=True)
+port = int(os.getenv('PORT'))
+app.run(host='0.0.0.0', port=port, debug=True)
