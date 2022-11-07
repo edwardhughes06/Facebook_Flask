@@ -4,19 +4,172 @@ header {
 	color:#fff; 
 	height: 80px;
 	display: flex;
+	background-color: #e5e5f7;
+/* 	pattern from https://www.magicpattern.design/tools/css-backgrounds */
+	background-color: #1E2326;
+	opacity: 0.8;
+	background-image:  linear-gradient(30deg, #121517 12%, transparent 12.5%, transparent 87%, #121517 87.5%, #121517), linear-gradient(150deg, #121517 12%, transparent 12.5%, transparent 87%, #121517 87.5%, #121517), linear-gradient(30deg, #121517 12%, transparent 12.5%, transparent 87%, #121517 87.5%, #121517), linear-gradient(150deg, #121517 12%, transparent 12.5%, transparent 87%, #121517 87.5%, #121517), linear-gradient(60deg, #12151777 25%, transparent 25.5%, transparent 75%, #12151777 75%, #12151777), linear-gradient(60deg, #12151777 25%, transparent 25.5%, transparent 75%, #12151777 75%, #12151777);
+	background-size: 20px 35px;
+	background-position: 0 0, 0 0, 10px 18px, 10px 18px, 0 0, 10px 18px;
 }
 body {
 	background-color:#f0f2f5;
   overflow-x: hidden;
   margin: 0;
+	
 }
-@media only screen and (max-width: 425px) {
-	body {
-		background-color: #ff0000;
+
+h1 {
+	font-family: 'Genos', sans-serif !important;
+	font-size: 50px;
+	margin:auto;
+	
+}
+@media only screen and (min-width: 861px) {
+	.mobile-search {
+		display: none;
 	}
+	.mobile {
+		display: none !important;
+	}
+}
+@media only screen and (max-width: 860px) {
+	.login-form-container {
+		flex-direction: column;
+		max-width: 90%;
+		gap: 0 !important;
+		padding-top: 0 !important;
+		text-align: center;
+}
 	.login-form-item {
-		position: absolute;
+		max-width: 90%;
+		margin: 0; !important
 	}
+	.marg-top {
+		margin-top: 0 !important;
+	}
+	.total-form {
+		max-width: 90%;
+		
+	}
+	.form-control{
+		max-width: 80%;
+	}
+	div.total-form>form{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	.form-control {
+		width: auto;
+	}
+	.login-form-item>.total-form{
+		padding: 30px !important;
+	}
+	.login-form-item{
+		margin: 0 auto !important;
+	}
+	.login-button , .sign-up-button{
+		max-width: 90%;
+	}
+	.login-page {
+		max-height: calc(100vh-80px) !important;
+	}
+	.login-header {
+		padding-left: 0 !important;
+	}
+	.line {
+		width: 85%;
+	}
+	.swiper {
+		display: flex !important;
+	}
+	.swiper-slide {
+		display: flex !important;
+	}
+	.mobile-friends{
+		display: block !important;
+		padding: 0 20px;
+		margin-bottom: 40px;
+	}
+	.friends-list-container{
+		display: none !important;
+	}
+	.side-bar{
+		display: none !important;
+	}
+	.main-content{
+		width: 100% !important;
+		position: absolute;
+		overflow-x: hidden !important;
+		justify-content: left;
+		margin-left: 0 !important;
+		padding: 0 !important;
+		
+	}
+	.user-prefrences{
+		padding: 0 20px;
+	}
+	.search-people{
+		padding: 0 20px;
+	}
+	.form-control{
+		width: auto !important;
+	}
+	.search-field-container {
+		padding-left: 0 !important;
+	}
+	.search-field {
+		margin-bottom: 10px !important;
+	}
+	.suggestion-card {
+		width: 240px;
+        height: 320px;
+		margin: 0 !important;
+		max-width: 240px !important;
+		box-shadow: none !important;
+	}
+	.suggestion-container {
+		display: none !important;
+	}
+	.desktop-search {
+		display: none !important;
+	}
+	.mobile-search {
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.chat-main-channel{
+		display: none !important;
+	}
+	.chat-sidebar {
+		width: 100% !important;
+	}
+	.chat-main-panel {
+		width: 100% !important;
+	}
+	.chat-room>.chat-box {
+		width: 100% !important;
+	}
+	.chat-room>.top-bar {
+		width: 100% !important;
+		z-index: -1 !important;
+	}
+	.chat-main-panel {
+		width: 100% !important;
+	}
+	.mobile {
+		display: flex;
+	}
+	.desktop {
+		display: none !important;
+	}
+}	
+
+.back {
+	color: red;
+	margin: 15px;
 }
 h1 {
 	font-family: Helvetica;
@@ -27,6 +180,14 @@ a {
 	color: white;
 	
 }
+.desktop-search {
+	height: auto;
+    width: auto;
+    display: flex;
+    padding: 10px;
+    overflow: scroll;
+    overflow-y: hidden;
+}	
 p {
 	color: white;
 	font-size: 14px;
@@ -35,6 +196,9 @@ p {
 }
 .header-left {
 	float:left;
+	float: left;
+	display: flex;
+	height: 100%;
 }
 .header-right {
 	float:right;
@@ -118,7 +282,7 @@ input {
 }
 
 .sign-up-button {
-	background-color:gold;
+	background-color:rgb(0, 180, 255);
 	color:black;
 	padding:14px 16px;
 	border:none;
@@ -131,7 +295,7 @@ input {
 	color: black;
 }
 .sign-up-button:hover {
-	background-color:#b0a103;
+	background-color:rgb(5, 123, 180);
 }
 .link-hover:hover {
 	color: #dedede;
@@ -326,7 +490,7 @@ hr {
 	background-color: #f9f9f9;
 	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-	z-index: 9;
+	z-index: -2;
   
 }
 
@@ -369,12 +533,12 @@ button.dropdown-header:hover {
 	color:white;
 	padding:14px 16px;
 	width: 100%;
-	background-color: #3b5998;
+	background-color: rgb(0, 180, 255);
 	border:none;
 	border-radius:6px;
 }
 .form-submit:hover {
-  background-color: #263963;
+  background-color: rgb(5, 123, 180);
 }
 
 .profile-pic-container {
@@ -511,7 +675,7 @@ button.dropdown-header:hover {
 /* ALL CSS FOR CHAT MUST BE IN HERE */
 @use postcss-nested;
 :root {
-	--chat-app-height: calc(100vh - 80px);
+	--chat-app-height: calc(100vh - 180px);
 	--chat-app-sidebar-width:350px;
 	--send-bg: #0B93F6;
   --send-color: white;
@@ -522,6 +686,8 @@ button.dropdown-header:hover {
 
 .chat-page {
 	max-height: var(--chat-app-height);
+	display: flex;
+	overflow-y: hidden;
 }
 
 .chat-sidebar{
@@ -561,7 +727,7 @@ div.chat-sidebar>div:nth-of-type(even) {
 	position: sticky;
   	top:0;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
-	
+	padding: 8px;
 
 }
 
@@ -627,11 +793,11 @@ div.chat-sidebar-friend-buttonr>div:nth-of-type(even) {
 .send-message-button {
 	height:26px;
 	padding:2px 10px;
-	background:gold;
+	background:rgb(0, 180, 255);
 	color: black;
 }
 .send-message-button:hover {
-	background:#b0a103;
+	background:rgb(5, 123, 180);
 }
 .chat-input {
 	width:75%;
@@ -715,3 +881,22 @@ p {
 }
 
 /* END CHAT CSS */
+
+.swiper {
+        width: 240px;
+        height: 400px;
+		display: none;
+}
+.swiper-slide {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+        font-size: 20px;
+        color: black;
+		background-color: #fff;
+		display: none;
+}
+.mobile-friends{
+	display: none;
+}

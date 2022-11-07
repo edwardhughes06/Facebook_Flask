@@ -7,62 +7,81 @@
 	<div class="top-bar">
 		<h1 class="dash">Dashboard</h1>
 	</div>
-	<div class="side-bar">
-    <a href="/preferences/">
-    <div class="profile-pic-container">
-      <img class = "profile-pic" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
-      <div class="edit-profile-pic">
-        <p class="edit-text"><i class="bi bi-pencil-square"></i></p>
-      </div>
-    </div> 
-    </a>
-		<h2>{{first_name}}</h2>
-    <p style="color:black; line-height:1px;">{{username}}</p>
+	
+	
+	{% include 'sidebar.html' %}
 
-  	<hr class="side-line">
-    
-
-
-    <a href="#" class="side-link">Manage Friends</a>
-		<br>
-    <br>
-    <a href="/sign-up/setup" class="side-link">Manage Preferences</a>
-
-
-
-    
-	</div>
+	
 	<div class="main-content">
+		<!-- Desktop Users -->
 		<div class="friends-list-container">
-			<h3 class="text-left">Your Friends List ({{friend_list|length}}):</h3>
+			<h3 class="text-left">Your Friends List ({{session['friend-id-list']|length}}):</h3>
 			<form action="" class="find-friend">
       		</form>
 			<div class="suggestion-container">
-      			{% for x in range(0,friend_list|length): %}
+      			{% for x in range(0,session['friend-id-list']|length): %}
 		  			<div class="suggestion-card">
 			      		<img class="profile-pic small flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
 						  {% for i in range((x*5),(x*5)+5): %}
 						  	<div class="friend-info-row">
 								{% if i % 5==0 %}
-							  			<h2>{{friend_details_list[i]}}</h2>
+							  			<h2>{{session['friend-details-list'][i]}}</h2>
 							  		{% else %}
-							  			{{friend_details_list[i]}}
+							  			{{session['friend-details-list'][i]}}
 									{% endif %}
 							  </div>
 						  {% endfor %}
 						<form name="remove-friend-button" action="" method='POST'>
-							<input style="display:none"type="number" name="remove-friend" value={{friend_list[x]}}>
+							<input style="display:none"type="number" name="remove-friend" value={{session['friend-id-list'][x]}}>
 							<button type="submit" class="remove-button"  >Remove Friend</button>
 							
 						</form>
 						  
-						<a href="{{url_for('chat',friend_id=friend_list[x])}}"><i class="chaticon bi bi-chat"></i></a>
+						<a href="{{url_for('chat',friend_id=session['friend-id-list'][x])}}"><i class="chaticon bi bi-chat"></i></a>
 					</div>
 				{% endfor %}
 
 
 			</div>
 		</div>
+
+		<!-- Mobile Users -->
+		<div class="mobile-friends">
+		<h3 class="text-left">Your Friends List ({{session['friend-id-list']|length}}):</h3>
+			<form action="" class="find-friend">
+      		</form>
+		<div class="swiper mySwiper">
+			
+      		<div class="swiper-wrapper">
+				{% for x in range(0,session['friend-id-list']|length): %}
+		        <div class="swiper-slide">
+					<div class="suggestion-card">
+			      		<img class="profile-pic small flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
+						{% for i in range((x*5),(x*5)+5): %}
+						  	<div class="friend-info-row">
+								{% if i % 5==0 %}
+							  			<h2>{{session['friend-details-list'][i]}}</h2>
+							  		{% else %}
+							  			{{session['friend-details-list'][i]}}
+									{% endif %}
+							  </div>
+						  {% endfor %}  
+						<form name="remove-friend-button" action="" method='POST'>
+							<input style="display:none"type="number" name="remove-friend" value={{session['friend-id-list'][x]}}>
+							<button type="submit" class="remove-button"  >Remove Friend</button>
+							
+						</form>
+						  
+						<a href="{{url_for('chat',friend_id=session['friend-id-list'][x])}}"><i class="chaticon bi bi-chat"></i></a>
+					</div>
+				</div>
+		        {% endfor %}
+		    </div>
+		</div>
+		</div>
+
+
+		
 		<div class="user-prefrences">
 			<h3 class="text-left">Your Preferences:</h3>
 		</div>
@@ -77,39 +96,79 @@
 			  
 	 		 	</form>
 			</div>
-		  	{% if search_result != None: %}
-			<h2 class="left">Your search returned {{search_ids|length}} results:</h2>
-			<div class="search-results">
-				
-				 {% for x in range(0,(search_ids|length)): %}
-				  <div class="suggestion-card">
-		      		<img class="profile-pic small flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
-					  
-					  {% for i in range((x*5),(x*5)+5): %}
-					  	<div class="friend-info-row">
-							{% if i % 5==0 %}
-						  			<h2>{{search_results[i]}}</h2>
-						  		{% else %}
-						  			{{search_results[i]}}
-								{% endif %}
-						  </div>
-					  {% endfor %}
-					<form name="add-friend-button" action="" method='POST'>
-						<input style="display:none"type="number" name="friend-id-input" value={{search_ids[x]}}>
-						<button type="submit" class="add-button">Add Friend</button>
-					</form>
-					<a href="{{url_for('chat',friend_id=search_ids[x])}}"><i class="chaticon bi bi-chat"></i></a>
-					  
-				  </div>
-				{% endfor %}
-			</div>
+		  	{% if (search_ids|length) != 0: %}
+				<div class="search-content">
+				<h2 class="left">Your search returned {{search_ids|length}} results:</h2>
+				<div class="search-results">
+					<!-- Desktop Users -->
+					<div class="desktop-search">
+					 {% for x in range(0,(search_ids|length)): %}
+					  <div class="suggestion-card">
+			      		<img class="profile-pic small flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
+						  
+						  {% for i in range((x*5),(x*5)+5): %}
+						  	<div class="friend-info-row">
+								{% if i % 5==0 %}
+							  			<h2>{{search_results[i]}}</h2>
+							  		{% else %}
+							  			{{search_results[i]}}
+									{% endif %}
+							  </div>
+						  {% endfor %}
+						  {% if search_ids[x] in friend_list %}
+							<form name="remove-friend-button" action="" method='POST'>
+								<input style="display:none"type="number" name="remove-friend" value={{search_ids[x]}}>
+								<button type="submit" class="remove-button"  >Remove Friend</button>
+							</form>
+						  {% else %}
+							<form name="add-friend-button" action="" method='POST'>
+								<input style="display:none"type="number" name="friend-id-input" value={{search_ids[x]}}>
+								<button type="submit" class="add-button">Add Friend</button>
+							</form>
+						  {% endif %}
+						  
+					  </div>
+					
+					{% endfor %}
+					</div>
+					<!-- Mobile Users -->
+					<div class="mobile-search" style="display: block !important;">
+					<div class="swiper mySwiper">
+						<div class="swiper-wrapper">
+							{% for x in range(0,(search_ids|length)): %}
+								<div class="swiper-slide">
+									<div class="suggestion-card">
+			      						<img class="profile-pic small flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
+										  
+										  {% for i in range((x*5),(x*5)+5): %}
+										  	<div class="friend-info-row">
+												{% if i % 5==0 %}
+											  			<h2>{{search_results[i]}}</h2>
+											  		{% else %}
+											  			{{search_results[i]}}
+													{% endif %}
+											  </div>
+										  {% endfor %}
+										<form name="add-friend-button" action="" method='POST'>
+											<input style="display:none"type="number" name="friend-id-input" value={{search_ids[x]}}>
+											<button type="submit" class="add-button">Add Friend</button>
+										</form>
+										  
+									  </div>
+								</div>	
+							{% endfor %}
+						</div>
+					</div>
+					</div>
+				</div>
+				</div>
 		    {% endif %}
 			
 		
       
     	</div>
     <hr>
-		
+<!-- Desktop Users -->		
   <div class="friend-suggestions">
 		<h3 class="text-left pad-20">People you may like:</h3>
 	  <div class="suggestion-container">
@@ -120,24 +179,60 @@
 			  {% for i in range((x*5),(x*5)+5): %}
 			  <div class="friend-info-row">
 				{% if i % 5==0 %}
-			  			<h2>{{similarFriends[i]}}</h2>
+			  			<h2>{{session['suggested-friends-details-list'][i]}}</h2>
 			  		{% else %}
-			  			{{similarFriends[i]}}
+			  			{{session['suggested-friends-details-list'][i]}}
 					{% endif %}
 			  </div>
 			  {% endfor %}
 			<form name="add-friend-button" action="" method='POST'>
-				<input style="display:none"type="number" name="friend-id-input" value={{id_similar_list[x]}}>
+				<input style="display:none"type="number" name="friend-id-input" value={{session['suggested-friends-id-list'][x]}}>
 				<button type="submit" class="add-button">Add Friend</button>
 			</form>
-			<a href="{{url_for('chat',friend_id=id_similar_list[x])}}"><i class="chaticon bi bi-chat"></i></a>
 			  
 		  </div>
 		{% endfor %}
 
 
 		</div>
-	</div>
+	
+	<!-- Mobile Users -->
+	<div class="mobile-friends">
+		<div class="swiper mySwiper">
+			<div class="swiper-wrapper">
+				{% for x in range(0,8): %}
+				<div class="swiper-slide">
+		  			<div class="suggestion-card">
+			      		<img class="profile-pic small flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
+						  
+						  {% for i in range((x*5),(x*5)+5): %}
+						  <div class="friend-info-row">
+							{% if i % 5==0 %}
+						  			<h2>{{session['suggested-friends-details-list'][i]}}</h2>
+						  		{% else %}
+						  			{{session['suggested-friends-details-list'][i]}}
+								{% endif %}
+						  </div>
+						  {% endfor %}
+						<form name="add-friend-button" action="" method='POST'>
+							<input style="display:none"type="number" name="friend-id-input" value={{session['suggested-friends-id-list'][x]}}>
+							<button type="submit" class="add-button">Add Friend</button>
+						</form>
+						  
+					  </div>
+					</div>
+					{% endfor %}
+			
+			</div>
+		</div>
+	</div>	
   </div>
 </div>
+</div>
+<script>
+      var swiper = new Swiper(".mySwiper", {
+        effect: "cards",
+        grabCursor: true,
+      });
+    </script>
 {% endblock %}

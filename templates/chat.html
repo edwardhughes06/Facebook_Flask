@@ -3,28 +3,12 @@
 
 {% block main %}
 
-<div class="chat-page">
-	<div class="chat-sidebar">
-		
-		<div class="section title-main">
-			<h2>Chat with your friends</h2>
-		</div>
-		{% for x in range(0,friend_list|length) %}
-			<div class="section">
-				<a class="chat-sidebar-friend-button" href="{{url_for('chat',friend_id=friend_list[x])}}">
-			      		<img class="profile-pic chat-pic flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
-				
-					<h3 style="padding-left:10px">{{friend_details_list[x*5]}}</h3>
-					
-				</a>
-					
-			</div>
-		{% endfor %}
-	</div><!--
---><div class="chat-main-panel">
+<div class="chat-page mobile">
+	
+	<div class="chat-main-panel">
 	{% if friend_id %}	
 	<div class="chat-room">
-		<div class="top-bar">You are talking to:{{friend_name}}</div>
+		<div class="top-bar">You are talking to {{friend_name}}<a class="back" href="/chat/">Back</a></div>
 		<div class="message-container">
 			{% for chat in all_chats %}
 				
@@ -45,7 +29,79 @@
 				<form name="send-message"action="{{url_for('chat',friend_id=friend_id)}}" method='POST'>				
 				{{ form.hidden_tag() }}
 				
-					{{ wtf.form_field(form.message_input ,class="input chat-input", placeholder=friend_name)}}
+					{{ wtf.form_field(form.message_input ,class="input chat-input login-input", placeholder="Message "+friend_name)}}
+				
+				<button class="send-message-button"type="submit">Send</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% else %}
+	<div class="chat-sidebar">
+		
+		<div class="section title-main">
+			<h2>Chat with your friends</h2>
+		</div>
+		{% for x in range(0,friend_list|length) %}
+			<div class="section">
+				<a class="chat-sidebar-friend-button" href="{{url_for('chat',friend_id=friend_list[x])}}">
+			      		<img class="profile-pic chat-pic flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
+				
+					<h3 style="padding-left:10px">{{friend_details_list[x*5]}}</h3>
+					
+				</a>
+					
+			</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+</div>
+</div>
+
+
+<div class="chat-page desktop">
+	<div class="chat-sidebar">
+		
+		<div class="section title-main">
+			<h2>Chat with your friends</h2>
+		</div>
+		{% for x in range(0,friend_list|length) %}
+			<div class="section">
+				<a class="chat-sidebar-friend-button" href="{{url_for('chat',friend_id=friend_list[x])}}">
+			      		<img class="profile-pic chat-pic flex" src="https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1" />
+				
+					<h3 style="padding-left:10px">{{friend_details_list[x*5]}}</h3>
+					
+				</a>
+					
+			</div>
+		{% endfor %}
+	</div>
+	<div class="chat-main-panel">
+	{% if friend_id %}	
+	<div class="chat-room">
+		<div class="top-bar">You are talking to {{friend_name}}</div>
+		<div class="message-container">
+			{% for chat in all_chats %}
+				
+				{% if chat.sender_id |int == user_id|int %}
+				
+					<p class="message-delivered">{{chat.message_text}}</p>
+				
+				{% else %}
+				
+					<p class="message-recieved">{{chat.message_text}}</p>
+				
+				{% endif %}
+			{% endfor %}
+			
+		</div>
+		<div class="chat-box">
+			<div class="message-box">
+				<form name="send-message"action="{{url_for('chat',friend_id=friend_id)}}" method='POST'>				
+				{{ form.hidden_tag() }}
+				
+					{{ wtf.form_field(form.message_input ,class="input chat-input", placeholder="Message "+friend_name)}}
 				
 				<button class="send-message-button"type="submit">Send</button>
 				</form>
@@ -59,8 +115,6 @@
 	</div>
 	{% endif %}
 </div>
-
-
 
 
 {% endblock %}
