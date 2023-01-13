@@ -1,5 +1,6 @@
 { pkgs }: {
   deps = [
+    pkgs.notmuch-bower
     pkgs.sqlite.bin
     pkgs.python38Full
   ];

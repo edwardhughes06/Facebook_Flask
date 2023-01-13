@@ -105,7 +105,10 @@ def get_friend_list(user_id):
 	friend_list = []
 	friendships = Friendships.query.filter_by(userId=user_id).all()
 	for user in friendships:
-		appendIfNotIn(friend_list, user.friend)
+		try:
+			appendIfNotIn(friend_list, user.friend)
+		except:
+			print("user deleted")
 
 	session['friend-id-list'] = friend_list
 	session['friend-details-list'] = get_user_details_list(friend_list)
@@ -120,21 +123,23 @@ def find_new_friends(current_user_id):
 	friendList = []
 	user_friends = get_friend_list(current_user_id)
 	print("user friends are", user_friends)
-	for x in range(0, 8):
-		similar_colour = UserDetails.query.filter_by(
-			favourite_colour=userDetails.favourite_colour).order_by(
-				func.random()).first()
-		similar_food = UserDetails.query.filter_by(
-			favourite_food=userDetails.favourite_food).order_by(
-				func.random()).first()
-		similar_sport = UserDetails.query.filter_by(
-			favourite_sport=userDetails.favourite_sport).order_by(
-				func.random()).first()
-		
-		appendIfNotIn(friendList, similar_colour.user_id, list2 = user_friends)
-		appendIfNotIn(friendList, similar_food.user_id, list2 = user_friends)
-		appendIfNotIn(friendList, similar_sport.user_id, list2 = user_friends)
-
+	try:
+		for x in range(0, 8):
+			similar_colour = UserDetails.query.filter_by(
+				favourite_colour=userDetails.favourite_colour).order_by(
+					func.random()).first()
+			similar_food = UserDetails.query.filter_by(
+				favourite_food=userDetails.favourite_food).order_by(
+					func.random()).first()
+			similar_sport = UserDetails.query.filter_by(
+				favourite_sport=userDetails.favourite_sport).order_by(
+					func.random()).first()
+			
+			appendIfNotIn(friendList, similar_colour.user_id, list2 = user_friends)
+			appendIfNotIn(friendList, similar_food.user_id, list2 = user_friends)
+			appendIfNotIn(friendList, similar_sport.user_id, list2 = user_friends)
+	except:
+		pass
 
 	session['suggested-friends-id-list'] = 	friendList
 	session['suggested-friends-details-list'] = get_user_details_list(friendList)
@@ -409,8 +414,11 @@ def dashboard(refresh_data = None):
 			search_results, search_ids = return_search_results_friends(
 				search_query)
 	if refresh_data is not None:
-		similarFriends, id_similar_list = find_new_friends(current_user.get_id())
-		friend_list, friend_details_list = get_friend_list(current_user.get_id())
+		try:
+			similarFriends, id_similar_list = find_new_friends(current_user.get_id())
+			friend_list, friend_details_list = get_friend_list(current_user.get_id())
+		except:
+			pass
 
 	return render_template('dashboard.html',
 							search_query=str(search_query),

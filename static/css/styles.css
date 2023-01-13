@@ -154,7 +154,7 @@ h1 {
 	}
 	.chat-room>.top-bar {
 		width: 100% !important;
-		z-index: -1 !important;
+		z-index: -2 !important;
 	}
 	.chat-main-panel {
 		width: 100% !important;
@@ -491,9 +491,16 @@ hr {
 	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: -2;
+	top: 0;
+	margin-top: 80px;
   
 }
-
+.dropdown {
+	z-index:-2;
+	min-width: 160px;
+	height:80px;
+	display:flex;
+}
 .dropdown:hover .dropdown-items {
   display: block;
 }
@@ -688,6 +695,7 @@ button.dropdown-header:hover {
 	max-height: var(--chat-app-height);
 	display: flex;
 	overflow-y: hidden;
+	z-index: -3 !important;
 }
 
 .chat-sidebar{
@@ -769,7 +777,7 @@ div.chat-sidebar-friend-buttonr>div:nth-of-type(even) {
 
 .chat-room>.top-bar{
 	margin-top:80px;
-	z-index:1;
+	z-index:-2;
 	position:absolute;
 	top:0;
 	width:82%;
@@ -809,7 +817,7 @@ div.chat-sidebar-friend-buttonr>div:nth-of-type(even) {
 .message-container {
 	display:flex;
 	flex-direction:column;
-	z-index:0;
+	z-index:-3;
 	margin: 100px 10px;
 	
 }
@@ -882,6 +890,29 @@ p {
 
 /* END CHAT CSS */
 
+/* /HOME  */
+
+
+.new-post-container {
+	margin: 30px;
+	background:#ffff;
+}
+
+.text-box {
+	font-size: 18px;
+	padding:14px 16px;
+	width: 330px;
+	border:1px solid #dddfe2;
+	border-radius:6px;
+	margin:10px;
+	resize:both;
+}
+.text-box.body {	height:200px;
+}
+
+/* END /HOME */
+
+
 .swiper {
         width: 240px;
         height: 400px;
@@ -899,4 +930,11 @@ p {
 }
 .mobile-friends{
 	display: none;
+}
+
+/*
+Just to make sure that there is a pointer cursor on the dropdown list items.
+*/
+.md-editor .dropdown-menu li {
+  cursor: pointer;
 }
